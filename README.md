@@ -44,132 +44,86 @@ Why is it called "Position-Wise"?
 Because the same feed-forward network is applied to each position separately.
 There is no interaction between positions within the feed-forward network.
 This design allows the model to process sequences in parallel.
-3. Mathematical Details of the Feed-Forward Network
+# Mathematical Details of the Feed-Forward Network
+
 The feed-forward network within the Transformer is typically composed of two linear transformations with a non-linear activation function between them. For a given position in the sequence, the computation is as follows:
 
-FFN
-(
-x
-)
-=
-f
-(
-x
-)
-=
-max
-(
-0
-,
-x
-W
-1
-+
-b
-1
-)
-W
-2
-+
-b
-2
-FFN(x)=f(x)=max(0,xW1​+b1​)W2​+b2​
-x
-x is the input vector at a particular position (output from the previous sub-layer, e.g., self-attention).
-W
-1
-W1​ and 
-W
-2
-W2​ are weight matrices.
-b
-1
-b1​ and 
-b
-2
-b2​ are bias vectors.
-max
-(
-0
-,
-⋅
-)
-max(0,⋅) is the ReLU activation function (Rectified Linear Unit).
-Dimensions:
-x
-∈
-R
-d
-model
-x∈Rdmodel​
-W
-1
-∈
-R
-d
-model
-×
-d
-ff
-W1​∈Rdmodel​×dff​
-b
-1
-∈
-R
-d
-ff
-b1​∈Rdff​
-W
-2
-∈
-R
-d
-ff
-×
-d
-model
-W2​∈Rdff​×dmodel​
-b
-2
-∈
-R
-d
-model
-b2​∈Rdmodel​
-Here, 
-d
-model
-dmodel​ is the model's hidden size (e.g., 512 or 1024), and 
-d
-ff
-dff​ is the inner-layer dimensionality, often set to a larger value (e.g., 2048) to increase the capacity of the network.
 
-Explanation:
+# FFN computation
+def FFN(x):
+    # Linear transformation and non-linearity
+    x_transformed = ReLU(np.dot(x, W1) + b1)
+    # Second linear transformation
+    output = np.dot(x_transformed, W2) + b2
+    return output
 
-First Linear Transformation: Projects the input from 
-d
-model
-dmodel​ to a higher-dimensional space 
-d
-ff
-dff​ to capture more complex features.
+# Where:
+# x: Input vector at a specific position (shape: [d_model])
+# W1: Weight matrix (shape: [d_model, d_ff])
+# b1: Bias vector (shape: [d_ff])
+# W2: Weight matrix (shape: [d_ff, d_model])
+# b2: Bias vector (shape: [d_model])
+
+# Activation function
+def ReLU(z):
+    return np.maximum(0, z)
+
+
 Non-Linearity (ReLU): Introduces non-linear behavior, allowing the network to learn non-linear relationships.
-Second Linear Transformation: Projects back to 
-d
-model
-dmodel​ so that the output can be added to the residual connection and fed into the next layer.
-4. Intuition Behind the Design Choices
+Second Linear Transformation: Projects back to dmodel​ so that the output can be added to the residual connection and fed into the next layer.
+
+# Intuition Behind the Design Choices
 Independent Application: Applying the feed-forward network to each position independently ensures that the model can process sequences in parallel, leveraging modern hardware accelerations like GPUs and TPUs.
 
 Non-Linearity and Depth: Incorporating non-linear activation functions and stacking multiple layers increases the model's capacity to learn complex mappings from input to output.
 
-# Dimensionality Expansion: The inner-layer dimensionality 
-d
-ff
-dff​ is larger than 
-d
-model
-dmodel​, providing a richer representation before projecting back down. This "bottleneck" design is similar to the structure found in residual networks for computer vision.
+# Dimensionality Expansion
+
+- The inner-layer dimensionality **d_ff** is larger than **d_model**, providing a richer representation before projecting back down.
+- This "bottleneck" design is similar to the structure found in residual networks for computer vision.
+
+**Details:**
+
+- **Input Dimension:** x ∈ ℝᵈᵐᵒᵈᵉˡ
+- **Expansion Dimension:** **d_ff** > **d_model**
+
+**Process:**
+
+**First Linear Transformation:**
+   
+   - x_W = xW₁ + b₁
+   - **Dimensions:**
+     - W₁ ∈ ℝ<sup>d_model × d_ff</sup>
+     - b₁ ∈ ℝ<sup>d_ff</sup>
+   
+**Non-Linearity:**
+   
+   - x_R = ReLU(x_W)
+   
+**Second Linear Transformation:**
+   
+   - output = x_RW₂ + b₂
+   - **Dimensions:**
+     - W₂ ∈ ℝ<sup>d_ff × d_model</sup>
+     - b₂ ∈ ℝ<sup>d_model</sup>
+   
+**Residual Connection:**
+   
+   - Final Output = output + x
+
+- **Expansion:** The input vector x is projected from dimension **d_model** up to a higher dimension **d_ff** to capture more complex features.
+- **Compression:** After applying the non-linear activation, it is projected back down to **d_model**.
+- **Benefits:**
+  - Allows the network to learn richer representations in the higher-dimensional space.
+  - The non-linear activation function introduces complexity, enabling the model to learn non-linear relationships.
+  - The design mirrors the bottleneck structures in residual networks (ResNets) used in computer vision, which help in training deep networks efficiently.
+
+**Analogous to Residual Networks:**
+
+- In ResNets, bottleneck layers use a similar strategy:
+  - **Expansion:** Increase dimensionality to capture complex patterns.
+  - **Compression:** Reduce dimensionality to maintain computational efficiency.
+  - This helps in preserving important features while reducing the number of parameters.
 
 # Benefits of the Feed-Forward Network in Transformers
 Expressiveness: Enhances the model's ability to capture complex patterns and non-linear relationships in the data.
@@ -199,7 +153,7 @@ The original Transformer model was designed for translating sentences between la
 Speech Recognition, Image Processing, and Beyond:
 
 Transformers have been adapted for modalities other than text, demonstrating the versatility of the architecture.
-Conclusion
+
 The feed-forward network in the Transformer plays a vital role in processing and transforming the representations obtained from the self-attention mechanism. By applying a two-layer linear transformation with a non-linear activation in between, the feed-forward network:
 
 Introduces non-linearities to capture complex patterns.
