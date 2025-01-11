@@ -1,11 +1,8 @@
-# attentionisallyouneed
-transformer
+# attention is all youneed
 
 The Transformer is a neural network architecture that has revolutionized the field of natural language processing (NLP) and beyond since its introduction in the seminal paper "Attention is All You Need" by Vaswani et al. in 2017. At its core, the Transformer architecture relies on the mechanism of self-attention to process sequences of data, allowing the model to weigh the importance of different elements in the input sequence when generating representations.
 
 A crucial component of the Transformer is the position-wise feed-forward network (often abbreviated as FFN) that follows the self-attention layers within each encoder and decoder block. Understanding the feed-forward network in the Transformer context is essential as it contributes significantly to the model's ability to capture complex patterns and dependencies in the data.
-
-Below, I'll explain the feed-forward Transformer comprehensively, covering the following aspects:
 
 Overview of the Transformer Architecture
 The Role of the Feed-Forward Network
@@ -14,7 +11,8 @@ Intuition Behind the Design Choices
 Benefits of the Feed-Forward Network in Transformers
 Comparison with Other Neural Network Architectures
 Applications and Impact
-1. Overview of the Transformer Architecture
+
+# Overview of the Transformer Architecture
 The Transformer architecture consists of an encoder and a decoder, both built from stacks of identical layers. Here's a high-level view:
 
 Encoder:
@@ -37,7 +35,8 @@ Layer Normalization: Normalizes the output, improving convergence and stability.
 Key Components:
 Self-Attention Mechanism: Allows each position in the input sequence to attend to all other positions, capturing dependencies regardless of their distance in the sequence.
 Feed-Forward Network: Applies a non-linear transformation to each position independently, further processing the information captured by the attention mechanism.
-2. The Role of the Feed-Forward Network
+
+# The Role of the Feed-Forward Network
 The Position-Wise Feed-Forward Network is applied independently and identically to each position (token) in the sequence. It transforms the representations captured by the attention mechanism, introducing non-linearity and enabling the model to capture complex patterns.
 
 Why is it called "Position-Wise"?
@@ -164,7 +163,7 @@ Independent Application: Applying the feed-forward network to each position inde
 
 Non-Linearity and Depth: Incorporating non-linear activation functions and stacking multiple layers increases the model's capacity to learn complex mappings from input to output.
 
-Dimensionality Expansion: The inner-layer dimensionality 
+# Dimensionality Expansion: The inner-layer dimensionality 
 d
 ff
 dff​ is larger than 
@@ -172,11 +171,12 @@ d
 model
 dmodel​, providing a richer representation before projecting back down. This "bottleneck" design is similar to the structure found in residual networks for computer vision.
 
-5. Benefits of the Feed-Forward Network in Transformers
+# Benefits of the Feed-Forward Network in Transformers
 Expressiveness: Enhances the model's ability to capture complex patterns and non-linear relationships in the data.
 Scalability: Allows for efficient computation due to parallelism, making it suitable for large-scale training.
 Versatility: Can adapt to various types of data and tasks by adjusting the architecture's depth and width.
-6. Comparison with Other Neural Network Architectures
+
+# Comparison with Other Neural Network Architectures
 Recurrent Neural Networks (RNNs):
 Sequential Processing: RNNs process sequences one timestep at a time, which is inherently sequential and less parallelizable.
 Memory Constraints: They can struggle with long sequences due to vanishing or exploding gradients.
